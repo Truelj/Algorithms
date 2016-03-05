@@ -53,25 +53,14 @@ public class Algorithms {
 
         return key_i;
     }
-     /*
-     * @param key is an array of 56 integers, 0 or 1
-     * @return an array of 64 integers, 0 or 1
-     */
-    public int[] finalKeyPermutation(int[] key_f){
-        int[] key_i = new int[56];
-        //perform final permutation on Key_f
-        
-        int[] key = new int[64];
-        //add the disgarded 8 parities to key_i 
-        return key;
-    }
+
     /*
-     * @param key is an array of 56 integers, 0 or 1
+     * @param key_i is an array of 56 integers, 0 or 1
      * divide key ino 2 sub arrays of 28 integers, 0 or 1
      * Perform rotation on each sub array
      * @return is an array of 56 integers, 0 or 1
      */
-    public int[] perRoundRotation(int[] key){
+    public int[] perRoundRotation(int[] key_i){
         return null;
     }
     /*
