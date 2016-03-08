@@ -8,13 +8,15 @@
  */
 public class Crypto {
     //create 8 s-boxes
-    private String[] box_1 = {"1110","0100","1101","0001","0010","1111","1011","1000","0011","1010","0110","1100","0101","1001","0000","0111",
+    private String[] box_1 = {
+            "1110","0100","1101","0001","0010","1111","1011","1000","0011","1010","0110","1100","0101","1001","0000","0111",
             "0000","1111","0111","0100","1110","0010","1101","0001","1010","0110","1100","1011","1001","0101","0011","1000",
             "0100","0001","1110","1000","1101","0110","0010","1011","1111","1100","1001","0111","0011","1010","0101","0000",
             "1111","1100","1000","0010","0100","1001","0001","0111","0101","1011","0011","1110","1010","0000","0110","1101"
         
     };
-    private String[] box_2 = {"1111","0001","1000","1110","0110","1011","0011","0100","1001","0111","0010","1101","1100","0000","0101","1010",
+    private String[] box_2 = {
+             "1111","0001","1000","1110","0110","1011","0011","0100","1001","0111","0010","1101","1100","0000","0101","1010",
              "0011","1101","0100","0111","1111","0010","1000","1110","1100","0000","0001","1010","0110","1001","1011","0101",
              "0000","1110","0111","1011","1010","0100","1101","0001","0101","1000","1100","0110","1001","0011","0010","1111",
              "1101","1000","1010","0001","0011","1111","0100","0010","1011","0110","0111","1100","0000","0101","1110","1001"        
@@ -66,7 +68,6 @@ public class Crypto {
      * @return an array of 56 integers, 0 or 1
      */
     public int[] initialKeyPermutation(int[] key){
-        //System.out.println("Initial key permutation");
         int[] newKey = new int[56];
         //disgarding 8 parities in key
         //i is row number, j is column number
@@ -75,8 +76,6 @@ public class Crypto {
                 newKey[i1 * 8 + j1] = key[i2 * 8 + j2 ];
             } 
         }
-        //perform initial permutation on newKey
-        //System.out.println("upper side:");
         int[] key_i  = new int[56];
         for(int i1 = 0, i2 = 0; i1 < 4 && i2 < 4; i1++, i2++){//row0,1,2,3
             for(int j1 = 0, j2 = 0; j1 < 7 && j2 < 7; j1++, j2++){//column0,1,2,3,4,5,6   
@@ -105,15 +104,15 @@ public class Crypto {
      */
     public int[] perRoundPermutation(int[] key_i){
         int[] keyPerRound = new int[48];
-        keyPerRound[0] = key_i[31];keyPerRound[1] = key_i[0];keyPerRound[2] = key_i[1];keyPerRound[3] = key_i[2];keyPerRound[4] = key_i[3];keyPerRound[5] = key_i[4];
-        keyPerRound[6] = key_i[3];keyPerRound[7] = key_i[4];keyPerRound[8] = key_i[5];keyPerRound[9] = key_i[6];keyPerRound[10] = key_i[7];keyPerRound[11] = key_i[8];
-        keyPerRound[12] = key_i[7];keyPerRound[13] = key_i[8];keyPerRound[14] = key_i[9];keyPerRound[15] = key_i[10];keyPerRound[16] = key_i[11];keyPerRound[17] = key_i[12];
-        keyPerRound[18] = key_i[11];keyPerRound[19] = key_i[12];keyPerRound[20] = key_i[13];keyPerRound[21] = key_i[14];keyPerRound[22] = key_i[15];keyPerRound[23] = key_i[16];
+        keyPerRound[0] = key_i[13];keyPerRound[1] = key_i[16];keyPerRound[2] = key_i[10];keyPerRound[3] = key_i[23];keyPerRound[4] = key_i[0];keyPerRound[5] = key_i[4];
+        keyPerRound[6] = key_i[2];keyPerRound[7] = key_i[27];keyPerRound[8] = key_i[14];keyPerRound[9] = key_i[5];keyPerRound[10] = key_i[20];keyPerRound[11] = key_i[9];
+        keyPerRound[12] = key_i[22];keyPerRound[13] = key_i[18];keyPerRound[14] = key_i[11];keyPerRound[15] = key_i[3];keyPerRound[16] = key_i[25];keyPerRound[17] = key_i[7];
+        keyPerRound[18] = key_i[15];keyPerRound[19] = key_i[6];keyPerRound[20] = key_i[26];keyPerRound[21] = key_i[19];keyPerRound[22] = key_i[12];keyPerRound[23] = key_i[1];
         
-        keyPerRound[24] = key_i[15];keyPerRound[25] = key_i[16];keyPerRound[26] = key_i[17];keyPerRound[27] = key_i[18];keyPerRound[28] = key_i[19];keyPerRound[29] = key_i[20];
-        keyPerRound[30] = key_i[19];keyPerRound[31] = key_i[20];keyPerRound[32] = key_i[21];keyPerRound[33] = key_i[22];keyPerRound[34] = key_i[23];keyPerRound[35] = key_i[24];
-        keyPerRound[36] = key_i[23];keyPerRound[37] = key_i[24];keyPerRound[38] = key_i[25];keyPerRound[39] = key_i[26];keyPerRound[40] = key_i[27];keyPerRound[41] = key_i[28];
-        keyPerRound[42] = key_i[27];keyPerRound[43] = key_i[28];keyPerRound[44] = key_i[29];keyPerRound[45] = key_i[30];keyPerRound[46] = key_i[31];keyPerRound[47] = key_i[0];
+        keyPerRound[24] = key_i[40];keyPerRound[25] = key_i[51];keyPerRound[26] = key_i[30];keyPerRound[27] = key_i[36];keyPerRound[28] = key_i[46];keyPerRound[29] = key_i[54];
+        keyPerRound[30] = key_i[29];keyPerRound[31] = key_i[39];keyPerRound[32] = key_i[50];keyPerRound[33] = key_i[44];keyPerRound[34] = key_i[32];keyPerRound[35] = key_i[47];
+        keyPerRound[36] = key_i[43];keyPerRound[37] = key_i[48];keyPerRound[38] = key_i[38];keyPerRound[39] = key_i[55];keyPerRound[40] = key_i[33];keyPerRound[41] = key_i[52];
+        keyPerRound[42] = key_i[45];keyPerRound[43] = key_i[41];keyPerRound[44] = key_i[49];keyPerRound[45] = key_i[35];keyPerRound[46] = key_i[28];keyPerRound[47] = key_i[31];
  
         return keyPerRound;
         
@@ -134,6 +133,7 @@ public class Crypto {
             
         }
         key[27] = key_i[0];
+        
         for(int i = 29; i < key_i.length; i++){//28 to 55
             key[i-1] = key_i[i];
         }
@@ -154,7 +154,7 @@ public class Crypto {
         for(int i = 2; i < key_i.length/2; i++){//2 to 27
             key[i-2] = key_i[i];
         }
-        key[26] = key_i[1];
+        key[26] = key_i[0];
         key[27] = key_i[1];
         for(int i = 30; i < key_i.length; i++){//30 to 55
             key[i-2] = key_i[i];
@@ -164,12 +164,7 @@ public class Crypto {
         return key;
     }
     
-    
-    
-
     /*********************************************End of generating per-round key*********************************************/
-    
-    
     
     /*********************************************Encypting plaintext*********************************************************/
     /*
@@ -193,9 +188,11 @@ public class Crypto {
     /*
      * @param perRoundText is an array of 64 integers, 0 or 1
      * @param perRoundKey is an array of 48 integers, 0 or 1
-     * @return an array of 68 integers, 0 or 1, as per-round ciphertext. 
+     * @return an array of 64 integers, 0 or 1, as per-round ciphertext. 
      */
     public int[] perRoundEncryption(int[] perRoundText,int[] perRoundKey){
+        //System.out.println("perRound output:");
+        //print(perRoundText);
         int[] left_input = new int[32];
         int[] right_input = new int[32];
         int[] output = new int[64];
@@ -207,7 +204,7 @@ public class Crypto {
             output[i-32] = perRoundText[i];
         }
         
-        int[] manglerOutput =  manglerFunction(right_input, perRoundKey);//32 bits
+        int[] manglerOutput = manglerFunction(right_input, perRoundKey);//32 bits
         //XOR manglerOutput and left_input
         for(int i =0; i < manglerOutput.length; i++){
             if((manglerOutput[i]+left_input[i])==1){
@@ -216,15 +213,92 @@ public class Crypto {
                 output[32 + i] = 0;
             }
         }
+        //System.out.println("perRound output:");
+        //print(output);
         return output;
     }
     
+    public int[] manglerFunction(int[] right_input, int[] perRoundKey){
+        //extend right text into 48 bits
+        int[] new_right_input = new int[48];
+        
+        new_right_input[0] = right_input[31];new_right_input[1] = right_input[0];new_right_input[2] = right_input[1];new_right_input[3] = right_input[2];new_right_input[4] = right_input[3];new_right_input[5] = right_input[4];
+        new_right_input[6] = right_input[3];new_right_input[7] = right_input[4];new_right_input[8] = right_input[5];new_right_input[9] = right_input[6];new_right_input[10] = right_input[7];new_right_input[11] = right_input[8];
+        new_right_input[12] = right_input[7];new_right_input[13] = right_input[8];new_right_input[14] = right_input[9];new_right_input[15] = right_input[10];new_right_input[16] = right_input[11];new_right_input[17] = right_input[12];
+        new_right_input[18] = right_input[11];new_right_input[19] = right_input[12];new_right_input[20] = right_input[13];new_right_input[21] = right_input[14];new_right_input[22] = right_input[15];new_right_input[23] = right_input[16];
+        new_right_input[24] = right_input[15];new_right_input[25] = right_input[16];new_right_input[26] = right_input[17];new_right_input[27] = right_input[18];new_right_input[28] = right_input[19];new_right_input[29] = right_input[20];
+        new_right_input[30] = right_input[19];new_right_input[31] = right_input[20];new_right_input[32] = right_input[21];new_right_input[33] = right_input[22];new_right_input[34] = right_input[23];new_right_input[35] = right_input[24];
+        new_right_input[36] = right_input[23];new_right_input[37] = right_input[24];new_right_input[38] = right_input[25];new_right_input[39] = right_input[26];new_right_input[40] = right_input[27];new_right_input[41] = right_input[28];
+        new_right_input[42] = right_input[27];new_right_input[43] = right_input[28];new_right_input[44] = right_input[29];new_right_input[45] = right_input[30];new_right_input[46] = right_input[31];new_right_input[47] = right_input[0];
+        //xor new_right_input with perRoundKey
+        for(int i = 0; i < new_right_input.length;i++){
+            if((new_right_input[i] + perRoundKey[i]) == 1){
+                new_right_input[i] = 1;
+            }else{
+                new_right_input[i] = 0;
+            }
+        }
+        String boxOutput="";
+        int i  = 0;
+        while(i < 8){
+            int[] three=new int[6];
+            for(int j = 0; j<three.length; j++){
+                three[j] = new_right_input[i*6 + j];
+            }
+            //get row and column number in s-box
+            int row = 2*three[0] + three[5];
+            int column = 8*three[1] + 4*three[2] + 2*three[3] + three[4];
+            //decide which s-box to use
+            switch(i){
+                case 0:
+                    //read box_1
+                    boxOutput += box_1[16*row + column];
+                    break;
+                case 1:
+                    boxOutput += box_2[16*row + column];
+                    break;
+                case 2:
+                    boxOutput += box_3[16*row + column];
+                    break;
+                case 3:
+                    boxOutput += box_4[16*row + column];
+                    break;
+                case 4:
+                    boxOutput += box_5[16*row + column];
+                    break;
+                case 5:
+                    boxOutput += box_6[16*row + column];
+                    break;
+                case 6:
+                    boxOutput += box_7[16*row + column];
+                    break;
+                case 7:
+                    boxOutput += box_8[16*row + column];
+                    break;
+            }     
+            i++;
+        }//end of while
+        //System.out.println("boxOuput:"+boxOutput);
+        //convert boxOutput to integer array
+        char[] boxOutputChar = boxOutput.toCharArray();
+        int[] boxOutputInt = new int[32];
+        for(int k = 0; k < boxOutputChar.length; k++){
+            if(boxOutputChar[k]=='1'){
+               boxOutputInt[k] = 1; 
+            }else{
+               boxOutputInt[k] = 0;
+            }
+        }
+        return sboxPermutation(boxOutputInt);
+        
+
+    }
     /*
      * @param rightText is an array of 32 integers, 0 or 1
      * @param perRoundKey is an array of 48 integers, 0 or 1
      * @return an array of 32 integers, 0 or 1, as 2nd half of per-round ciphertext
      */
-    public int[] manglerFunction(int[] rightText, int[] perRoundKey){
+    public int[] manglerFunction2(int[] rightText, int[] perRoundKey){
         String boxOutput="";
         int[] one  = new int[6];
         int[] two = new int[6];
@@ -264,7 +338,7 @@ public class Crypto {
             two[j++] = perRoundKey[6*i+4];
             two[j++] = perRoundKey[6*i+5];
             j = 0;
-            //XOR one and two to get s-box input, which is three 
+            //XOR one and two to get s-box output, which is three 
             for(int k = 0; k < 6; k++){
                 if((one[k] + two[k])== 1){
                     three[k] = 1;
@@ -329,30 +403,34 @@ public class Crypto {
         output[20] = boxOutputInt[31];output[21] = boxOutputInt[26];output[22] = boxOutputInt[2];output[23] = boxOutputInt[8];
         output[24] = boxOutputInt[18];output[25] = boxOutputInt[12];output[26] = boxOutputInt[29];output[27] = boxOutputInt[5];
         output[28] = boxOutputInt[21];output[29] = boxOutputInt[10];output[30] = boxOutputInt[3];output[31] = boxOutputInt[24];  
+        //System.out.println("sbox permutation:");
+        //print(output);
         return output;
     }
     /*
-     * @param output is an array of 64 integers, 0 or 1
+     * @param input is an array of 64 integers, 0 or 1
      * @return an array of 64 integers, 0 or 1
      * finalPermutation is an inverse of initialPermutation
      */
-    public int[] finalDataPermutation(int[] output){
-        int[] input = new int[64];
-        for(int output_row = 0; output_row < 8; output_row++){
-            for(int output_column = 7; output_column >= 0; output_column-- ){
-                if(output_row < 4){
-                    input[output_column*8 + output_row*2 + 1] = output[output_row*8 + output_column];
-                }else{
-                    input[output_column*8 + (output_row - 4)*2] = output[output_row*8 + output_column];
+    public int[] finalDataPermutation(int[] input){
+        int[] output = new int[64];
+        for(int input_row = 0; input_row < 8; input_row++){
+            if(input_row < 4){
+                for(int input_column = 0; input_column < 8; input_column++){
+                    output[(7-input_column)*8+ input_row*2 + 1] = input[input_row*8 + input_column];
+                }
+            }else{
+                for(int input_column = 0; input_column < 8; input_column++){
+                    output[(7-input_column)*8+ (input_row - 4)*2] = input[input_row*8 + input_column];
                 }
             }
         }
-        return input;
+        return output;
     }
 
     public void print(int[] data){
         for(int i =0; i < data.length; i++){
-            System.out.print(data[i] + " ");
+            System.out.print(data[i] + "");
         }
         System.out.println("");
     }
@@ -460,7 +538,7 @@ public class Crypto {
         int[] output_round = initialDataPermutation(plaintext);
         //do the initial permunation on key to get 56 bits 
         int[] key_i = new int[56];
-        key_i = initialKeyPermutation(key);
+        key_i = initialKeyPermutation(key);//56 bits
         //generate per-round 48-bit key-- perRoundRotation(), perRoundPermutation()
         int[] key_round = new int[48];
         for(int i=1; i<17; i++){//16 rounds
@@ -468,21 +546,24 @@ public class Crypto {
                key_i = perRoundRotation_1(key_i);//56 bits
                key_round = perRoundPermutation(key_i);//48 bits
                //do the per-round encryption 
-               output_round = perRoundEncryption(output_round, key_round);//64 bits
-               
+               output_round = perRoundEncryption(output_round, key_round);//64 bits 
             }else{
                key_i = perRoundRotation_2(key_i);//56 bits
                key_round = perRoundPermutation(key_i);//48 bits
                //do the per-round encryption 
                output_round = perRoundEncryption(output_round, key_round);//64 bits
             }
-           // System.out.println("round "+ i + " key:");
-           // print(key_round);
-           // System.out.println("round: "+ i + " output");
-           // print(output_round);
+            //System.out.println("round "+ i + " key:");
+            //print(key_round);
         }//finish 16 rounds
+        //inverse L16 and R16
+        int[] inverse_output = new int[64];
+        for(int i  = 0; i < output_round.length/2; i++){//0 to 31
+            inverse_output[i] = output_round[i+32];
+            inverse_output[i+32] = output_round[i];
+        }
         //final permutation on data
-        int[] output = finalDataPermutation(output_round);
+        int[] output = finalDataPermutation(inverse_output);
         return output;
     }
     
@@ -601,32 +682,29 @@ public class Crypto {
     public static void main(String[] args){
         //testing 3 algorithms
         Crypto algorithms = new Crypto();
-        int[] input = new int[64];
-        for(int i = 0; i < 8; i++){
-            for(int j = 0; j < 8; j++){
-                if(j % 2 == 1){
-                    input[i*8+j] = 1;
-                }else{
-                    input[i*8+j] = 0;
-                }
-            }
-        }
-        
-        int[] key = new int[64];
-        for(int i = 0; i< 8; i++){
-            for(int j= 0; j< 8; j++){
-                key[i*8+ j] = 0;    
-            }
-        }
-        //algorithms.DES(input, key);
-        String ecb_input = "0101010101010101010101010101010101010101010101010101010101010101";
-               
-        String ecb_key = "000000000000000000000000000000000000000000000000000000000000000000000000";
+        int[] plaintext = { 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 
+                            0, 1, 1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 1, 1, 0, 0, 1, 1, 1, 1, 
+                            0, 0, 0, 1, 0, 0, 1, 1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 0, 0, 1, 
+                            1, 0, 1, 1, 1, 1, 0, 1, 1, 1, 1}; 
+
+        int[] key2 = { 0, 0, 0, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 
+                        0, 0, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 0, 0, 1, 1, 0, 0, 
+                        1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 0, 0, 1, 1, 0, 1, 1, 1, 1, 
+                        1, 1, 1, 1, 1, 0, 0, 0, 1 }; 
+        algorithms.print(algorithms.DES(plaintext, key2));
+        String ecb_input = "GO GATORS!"; 
+
+        String ecb_key = "ABCDEFGH"; 
         algorithms.print(algorithms.ECB(ecb_input, ecb_key));
-        String iv = "1111111111111111111111111111111111111111111111111111111111111111";
-        algorithms.print(algorithms.CBC(ecb_input, ecb_key, iv));
+        String cbc_input = "SECURITYSECURITY"; 
+
+        String cbc_key = "ABCDEFGH"; 
+
+        String IV = "ABCDEFGH"; 
+
+        algorithms.print(algorithms.CBC(cbc_input, cbc_key, IV));
         
-        
+
     }
     
     
