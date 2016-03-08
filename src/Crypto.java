@@ -316,7 +316,20 @@ public class Crypto {
                boxOutputInt[k] = 0;
             }
         }
-        return boxOutputInt;
+        
+        return sboxPermutation(boxOutputInt);
+    }
+    public int[] sboxPermutation(int[] boxOutputInt){
+        int[] output = new int[32];
+        output[0] = boxOutputInt[15];output[1] = boxOutputInt[6];output[2] = boxOutputInt[19];output[3] = boxOutputInt[20];
+        output[4] = boxOutputInt[28];output[5] = boxOutputInt[11];output[6] = boxOutputInt[27];output[7] = boxOutputInt[16];
+        output[8] = boxOutputInt[0];output[9] = boxOutputInt[14];output[10] = boxOutputInt[22];output[11] = boxOutputInt[25];
+        output[12] = boxOutputInt[4];output[13] = boxOutputInt[17];output[14] = boxOutputInt[30];output[15] = boxOutputInt[9];
+        output[16] = boxOutputInt[1];output[17] = boxOutputInt[7];output[18] = boxOutputInt[23];output[19] = boxOutputInt[13];
+        output[20] = boxOutputInt[31];output[21] = boxOutputInt[26];output[22] = boxOutputInt[2];output[23] = boxOutputInt[8];
+        output[24] = boxOutputInt[18];output[25] = boxOutputInt[12];output[26] = boxOutputInt[29];output[27] = boxOutputInt[5];
+        output[28] = boxOutputInt[21];output[29] = boxOutputInt[10];output[30] = boxOutputInt[3];output[31] = boxOutputInt[24];  
+        return output;
     }
     /*
      * @param output is an array of 64 integers, 0 or 1
@@ -344,81 +357,8 @@ public class Crypto {
         System.out.println("");
     }
     /*********************************************End of encypting plaintext********************************************************/
-    
-    /*********************************************algorithms********************************************************/
-    /*
-     * @param plaintext is an array of 64 integers, 0 or 1
-     * @param key is an array of 64 integers, 0 or 1
-     * @return an array of 64 integers, 0 or 1
-     */
-    public int[] DES(int[] plaintext, int[] key){
-        //do the inital permutation on data 
-        int[] output_round = initialDataPermutation(plaintext);
-        //do the initial permunation on key to get 56 bits 
-        int[] key_i = new int[56];
-        key_i = initialKeyPermutation(key);
-        //generate per-round 48-bit key-- perRoundRotation(), perRoundPermutation()
-        int[] key_round = new int[48];
-        for(int i=1; i<17; i++){//16 rounds
-            if(i == 1 || i == 2 || i == 9 || i == 16){
-               key_i = perRoundRotation_1(key_i);//56 bits
-               key_round = perRoundPermutation(key_i);//48 bits
-               //do the per-round encryption 
-               output_round = perRoundEncryption(output_round, key_round);//64 bits
-               
-            }else{
-               key_i = perRoundRotation_2(key_i);//56 bits
-               key_round = perRoundPermutation(key_i);//48 bits
-               //do the per-round encryption 
-               output_round = perRoundEncryption(output_round, key_round);//64 bits
-            }
-           // System.out.println("round "+ i + " key:");
-           // print(key_round);
-           // System.out.println("round: "+ i + " output");
-           // print(output_round);
-        }//finish 16 rounds
-        //final permutation on data
-        int[] output = finalDataPermutation(output_round);
-        return output;
-    }
-    
-    
-    
-    /*
-     * @param plaintext is a string
-     *                  needs to be converted to an array of integers, 0 or 1, by transforming each letter in the string into 8-bit ASCII code              
-     * @param key is a string
-     *            needs to be converted to an array of integers, 0 or 1, by transforming each letter in the string into 8-bit ASCII code 
-     * @return an array of decimal numbers, by grouping every 8 elemnents in the array as one ASCII code and converting it into its decimal format.      
-     */
-    public int[] ECB(String plaintext, String key){
-        char[] data_input = plaintext.toCharArray();
-        int[] ecb_output_binary = new int[data_input.length*8];
-        //get des_key
-        int[] des_key = convertToBinary_2(key.toCharArray());
-        int groups = 0;
-        while(groups < data_input.length/8){//each group has 8 charactors,which is 64 bits in total
-            //get des_input
-            int[] des_input = convertToBinary_3(data_input, groups*8);
-            int[] des_output = DES(des_input, des_key);
-            for(int i = 0; i < des_output.length; i++){//add des_output to ecb_output array
-                ecb_output_binary[groups*64 + i] = des_output[i];
-            }
-            groups++;
-        }
-        if(data_input.length % 8 != 0){
-            //get des_input
-            int[] des_input = convertToBinary_3(data_input, groups*8);
-            int[] des_output = DES(des_input, des_key);
-            for(int i = 0; i < des_output.length; i++){//add des_output to ecb_output array
-                ecb_output_binary[groups*64 + i] = des_output[i];
-            }
-        }
-        //convert every eight ecb outputs into a decimal number
-        int[] ecb_output_decimal = convertToDecimal_2(ecb_output_binary);
-        return ecb_output_decimal;
-    }
-        /*
+    /*********************************************ASCII********************************************************/
+     /*
      * @param input_binary is an arary of the 8-bit binary representations for some ASCII charactors
      * @param start indicates which group of the 8-bit to be converted
      * @return the decimal order of the ASCII charactor
@@ -508,7 +448,84 @@ public class Crypto {
         }
         return inverse;
     }
+    /*********************************************END OF ASCII********************************************************/
+    /*********************************************algorithms**********************************************************/
+    /*
+     * @param plaintext is an array of 64 integers, 0 or 1
+     * @param key is an array of 64 integers, 0 or 1
+     * @return an array of 64 integers, 0 or 1
+     */
+    public int[] DES(int[] plaintext, int[] key){
+        //do the inital permutation on data 
+        int[] output_round = initialDataPermutation(plaintext);
+        //do the initial permunation on key to get 56 bits 
+        int[] key_i = new int[56];
+        key_i = initialKeyPermutation(key);
+        //generate per-round 48-bit key-- perRoundRotation(), perRoundPermutation()
+        int[] key_round = new int[48];
+        for(int i=1; i<17; i++){//16 rounds
+            if(i == 1 || i == 2 || i == 9 || i == 16){
+               key_i = perRoundRotation_1(key_i);//56 bits
+               key_round = perRoundPermutation(key_i);//48 bits
+               //do the per-round encryption 
+               output_round = perRoundEncryption(output_round, key_round);//64 bits
+               
+            }else{
+               key_i = perRoundRotation_2(key_i);//56 bits
+               key_round = perRoundPermutation(key_i);//48 bits
+               //do the per-round encryption 
+               output_round = perRoundEncryption(output_round, key_round);//64 bits
+            }
+           // System.out.println("round "+ i + " key:");
+           // print(key_round);
+           // System.out.println("round: "+ i + " output");
+           // print(output_round);
+        }//finish 16 rounds
+        //final permutation on data
+        int[] output = finalDataPermutation(output_round);
+        return output;
+    }
     
+    /*
+     * @param plaintext is a string
+     *                  needs to be converted to an array of integers, 0 or 1, by transforming each letter in the string into 8-bit ASCII code              
+     * @param key is a string
+     *            needs to be converted to an array of integers, 0 or 1, by transforming each letter in the string into 8-bit ASCII code 
+     * @return an array of decimal numbers, by grouping every 8 elemnents in the array as one ASCII code and converting it into its decimal format.      
+     */
+    public int[] ECB(String plaintext, String key){
+        char[] data_input = plaintext.toCharArray();
+        int[] ecb_output_binary;
+        if(data_input.length%8 == 0){
+            ecb_output_binary = new int[data_input.length*8];
+        }else{
+            ecb_output_binary = new int[(data_input.length/8 + 1)*8*8];
+        }
+        //get des_key
+        int[] des_key = convertToBinary_2(key.toCharArray());
+        int groups = 0;
+        while(groups < data_input.length/8){//each group has 8 charactors,which is 64 bits in total
+            //get des_input
+            int[] des_input = convertToBinary_3(data_input, groups*8);
+            int[] des_output = DES(des_input, des_key);
+            for(int i = 0; i < des_output.length; i++){//add des_output to ecb_output array
+                ecb_output_binary[groups*64 + i] = des_output[i];
+            }
+            groups++;
+        }
+        if(data_input.length % 8 != 0){
+            //get des_input
+            int[] des_input = convertToBinary_3(data_input, groups*8);
+            int[] des_output = DES(des_input, des_key);
+            for(int i = 0; i < des_output.length; i++){//add des_output to ecb_output array
+                ecb_output_binary[groups*64 + i] = des_output[i];
+            }
+        }
+        //convert every eight ecb outputs into a decimal number
+        int[] ecb_output_decimal = convertToDecimal_2(ecb_output_binary);
+        return ecb_output_decimal;
+    }
+
     /*
      * @param plaintext - is a string
      *                  - needs to be converted to an array of integers, 0 or 1, by transforming each letter in the string into 8-bit ASCII code   
@@ -520,7 +537,65 @@ public class Crypto {
      * @return an array of decimal numbers, by grouping every 8 elemnents in the array as one ASCII code and converting it into its decimal format. 
      */
     public int[] CBC(String plaintext, String key, String IV){
-        return null;
+        char[] data_input = plaintext.toCharArray();
+        int[] cbc_output_binary;
+        if(data_input.length%8 == 0){
+            cbc_output_binary = new int[data_input.length*8];
+        }else{
+            cbc_output_binary = new int[(data_input.length/8 + 1)*8*8];
+        }
+        //get des_key
+        int[] des_key = convertToBinary_2(key.toCharArray());
+        int[] iv = convertToBinary_2(IV.toCharArray());
+        int groups = 0;
+        int[] des_output = new int[64];
+        while(groups < data_input.length/8){//each group has 8 charactors,which is 64 bits in total
+            //get des_input
+            int[] des_input = convertToBinary_3(data_input, groups*8);//64 bits
+            if(groups == 0){
+                //XOR des_input with iv
+                for(int i = 0; i < des_input.length; i++){
+                    if((des_input[i] +  iv[i]) == 1){
+                        des_input[i] = 1;
+                    }else{
+                        des_input[i] = 0;
+                    }
+                }
+            }else{
+                //XOR des_input with des_output
+                for(int i = 0; i < des_input.length; i++){
+                    if((des_input[i] +  des_output[i]) == 1){
+                        des_input[i] = 1;
+                    }else{
+                        des_input[i] = 0;
+                    }
+                }
+            }
+            des_output = DES(des_input, des_key);//64 bits
+            for(int i = 0; i < des_output.length; i++){//add des_output to ecb_output array
+                cbc_output_binary[groups*64 + i] = des_output[i];
+            }
+            groups++;
+        }
+        if(data_input.length % 8 != 0){
+            //get des_input
+            int[] des_input = convertToBinary_3(data_input, groups*8);
+            //XOR des_input with des_output
+            for(int i = 0; i < des_input.length; i++){
+                if((des_input[i] +  des_output[i]) == 1){
+                    des_input[i] = 1;
+                }else{
+                    des_input[i] = 0;
+                }
+            }
+            des_output = DES(des_input, des_key);
+            for(int i = 0; i < des_output.length; i++){//add des_output to ecb_output array
+                cbc_output_binary[groups*64 + i] = des_output[i];
+            }
+        }
+        //convert every eight ecb outputs into a decimal number
+        int[] cbc_output_decimal = convertToDecimal_2(cbc_output_binary);
+        return cbc_output_decimal;
     }
     
     public static void main(String[] args){
@@ -548,6 +623,8 @@ public class Crypto {
                
         String ecb_key = "000000000000000000000000000000000000000000000000000000000000000000000000";
         algorithms.print(algorithms.ECB(ecb_input, ecb_key));
+        String iv = "1111111111111111111111111111111111111111111111111111111111111111";
+        algorithms.print(algorithms.CBC(ecb_input, ecb_key, iv));
         
         
     }
