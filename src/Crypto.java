@@ -66,7 +66,7 @@ public class Crypto {
      * @return an array of 56 integers, 0 or 1
      */
     public int[] initialKeyPermutation(int[] key){
-        System.out.println("Initial key permutation");
+        //System.out.println("Initial key permutation");
         int[] newKey = new int[56];
         //disgarding 8 parities in key
         //i is row number, j is column number
@@ -186,24 +186,6 @@ public class Crypto {
                     output[(input_column/2 + 4)*8 + output_column] = input[input_row*8 + input_column];
                 }
             }
-        }
-        System.out.println("Data input:");
-        //testing the initial permutation
-        for(int i = 0; i < 8; i++){
-            for(int j = 0; j < 8; j++){
-                System.out.print(input[i*8+j]);
-               
-            }
-            System.out.println("");
-        }
-        System.out.println("Initial data permutation:");
-        //testing the initial permutation
-        for(int i = 0; i < 8; i++){
-            for(int j = 0; j < 8; j++){
-                System.out.print(output[i*8+j]);
-               
-            }
-            System.out.println("");
         }
         return output;
     }
@@ -352,15 +334,6 @@ public class Crypto {
                 }
             }
         }
-        System.out.println("final data permutation:");
-        //testing the final permutation
-        for(int i = 0; i < 8; i++){
-            for(int j = 0; j < 8; j++){
-                System.out.print(input[i*8+j]);
-               
-            }
-            System.out.println("");
-        }
         return input;
     }
 
@@ -399,10 +372,10 @@ public class Crypto {
                //do the per-round encryption 
                output_round = perRoundEncryption(output_round, key_round);//64 bits
             }
-            System.out.println("Per round key:");
-            print(key_round);
-            System.out.println("Per round output");
-            print(output_round);
+           // System.out.println("round "+ i + " key:");
+           // print(key_round);
+           // System.out.println("round: "+ i + " output");
+           // print(output_round);
         }//finish 16 rounds
         //final permutation on data
         int[] output = finalDataPermutation(output_round);
@@ -419,9 +392,122 @@ public class Crypto {
      * @return an array of decimal numbers, by grouping every 8 elemnents in the array as one ASCII code and converting it into its decimal format.      
      */
     public int[] ECB(String plaintext, String key){
-        return null;
+        char[] data_input = plaintext.toCharArray();
+        int[] ecb_output_binary = new int[data_input.length*8];
+        //get des_key
+        int[] des_key = convertToBinary_2(key.toCharArray());
+        int groups = 0;
+        while(groups < data_input.length/8){//each group has 8 charactors,which is 64 bits in total
+            //get des_input
+            int[] des_input = convertToBinary_3(data_input, groups*8);
+            int[] des_output = DES(des_input, des_key);
+            for(int i = 0; i < des_output.length; i++){//add des_output to ecb_output array
+                ecb_output_binary[groups*64 + i] = des_output[i];
+            }
+            groups++;
+        }
+        if(data_input.length % 8 != 0){
+            //get des_input
+            int[] des_input = convertToBinary_3(data_input, groups*8);
+            int[] des_output = DES(des_input, des_key);
+            for(int i = 0; i < des_output.length; i++){//add des_output to ecb_output array
+                ecb_output_binary[groups*64 + i] = des_output[i];
+            }
+        }
+        //convert every eight ecb outputs into a decimal number
+        int[] ecb_output_decimal = convertToDecimal_2(ecb_output_binary);
+        return ecb_output_decimal;
+    }
+        /*
+     * @param input_binary is an arary of the 8-bit binary representations for some ASCII charactors
+     * @param start indicates which group of the 8-bit to be converted
+     * @return the decimal order of the ASCII charactor
+     */
+    public int convertToDecimal(int[] input_binary, int index){
+        int decimal =0;
+        for(int i = 0; i < 8; i++){
+            decimal += (int)(input_binary[i + 8*index]*Math.pow(2, 7-i));
+        }
+        return decimal;
     }
     
+        /*
+     * @param input_binary is an arary of the 8-bit binary representations for some ASCII charactors
+     * @return the decimal order of those ASCII charactors
+     */
+    public int[] convertToDecimal_2(int[] input_binary){
+        int[] decimals = new int[input_binary.length/8];
+        for(int i = 0; i < input_binary.length/8; i++){
+             decimals[i] = convertToDecimal(input_binary, i);
+        }
+        return decimals;
+    }
+     /*
+     * @param charactors is an array of charactors
+     * @param start -- if there are more than 8 charactors after the starting position, only read 8 charactors
+     * if there are fewer than 8 charactors after the starting position ,adding enought 0s after output_binary array
+     * @return int[] is the concatenation of 8-bit binary values of charactors
+     */  
+     public int[] convertToBinary_3(char[] charactors, int start){
+        int[] output_binary = new int[64];
+        int i;
+        for(i = 0; i < (charactors.length - start) && i < 8; i++){
+            //get binary value of each charactor first
+            int[] charactor_binary = convertToBinary(charactors[i + start]);
+            for(int j = 0; j < charactor_binary.length; j++){
+                output_binary[i*8 + j] = charactor_binary[j];
+            }
+        }
+        while(i < 8){
+            for(int j = 0; j<8;j++){
+                output_binary[i*8 + j] = 0;
+            }
+            i++;
+        }
+        return output_binary;
+    }
+    /*
+     * @param charactors is an array of charactors
+     * if the length of charactors array is greater than 8, only read 8 charactors
+     * if the length of charactors array is smaller than 8 ,adding enought 0s after output_binary array
+     * @return int[] is the concatenation of 8-bit binary values of charactors
+     */
+    public  int[] convertToBinary_2(char[] charactors){
+        int[] output_binary = new int[64];
+        int i;
+        for(i = 0; i < charactors.length && i < 8; i++){
+            //get binary value of each charactor first
+            int[] charactor_binary = convertToBinary(charactors[i]);
+            for(int j = 0; j < charactor_binary.length; j++){
+                output_binary[i*8 + j] = charactor_binary[j];
+            }
+        }
+        while(i < 8){
+            for(int j = 0; j<8;j++){
+                output_binary[i*8 + j] = 0;
+            }
+            i++;
+        }
+        return output_binary;
+    }
+    public int[] convertToBinary(char charactor){
+        int ascii_decimal = (int)charactor;
+        int[] ascii_binary =  new int[8];
+        int i = 0; 
+        while(ascii_decimal/2 != 0){
+            ascii_binary[i++] = ascii_decimal%2;
+            ascii_decimal /= 2;
+        }
+        ascii_binary[i++] = ascii_decimal%2;
+        while(i < 8){
+            ascii_binary[i++] = 0;
+        }
+        int[] inverse = new int[8];
+        for(int j = 0; j < ascii_binary.length; j++){
+            inverse[j] = ascii_binary[7-j];
+        }
+        return inverse;
+    }
     
     /*
      * @param plaintext - is a string
@@ -457,8 +543,11 @@ public class Crypto {
                 key[i*8+ j] = 0;    
             }
         }
-        algorithms.DES(input, key);
-        
+        //algorithms.DES(input, key);
+        String ecb_input = "0101010101010101010101010101010101010101010101010101010101010101";
+               
+        String ecb_key = "000000000000000000000000000000000000000000000000000000000000000000000000";
+        algorithms.print(algorithms.ECB(ecb_input, ecb_key));
         
         
     }
