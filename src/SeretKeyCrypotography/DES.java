@@ -1,3 +1,5 @@
+package SeretKeyCrypotography;
+
 /**
  *
  * @author Jie Li
@@ -6,7 +8,7 @@
  *  - implementing the ECB algorithm
  *  - implementing the CBC algorithm
  */
-public class Crypto {
+public class DES {
     //create 8 s-boxes
     private String[] box_1 = {
             "1110","0100","1101","0001","0010","1111","1011","1000","0011","1010","0110","1100","0101","1001","0000","0111",
@@ -58,7 +60,7 @@ public class Crypto {
         "0010","0001","1110","0111","0100","1010","1000","1101","1111","1100","1001","0000","0011","0101","0110","1011"
     };
     
-    public Crypto(){
+    public DES(){
         
     }
 
@@ -681,7 +683,7 @@ public class Crypto {
     
     public static void main(String[] args){
         //testing 3 algorithms
-        Crypto algorithms = new Crypto();
+        DES algorithms = new DES();
         int[] plaintext = { 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 
                             0, 1, 1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 1, 1, 0, 0, 1, 1, 1, 1, 
                             0, 0, 0, 1, 0, 0, 1, 1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 0, 0, 1, 
